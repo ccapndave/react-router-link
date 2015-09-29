@@ -1,5 +1,4 @@
 import React from 'react'
-import warning from 'warning'
 
 const { bool, object, string, func } = React.PropTypes
 
@@ -101,15 +100,6 @@ const Link = React.createClass({
         console.error(`Only 'push' and 'replace' are supported as historyTypes`);
       }
     }
-  },
-
-  componentWillMount() {
-    warning(
-      this.context.history,
-      'A <Link> should not be rendered outside the context of history ' +
-      'some features including real hrefs, active styling, and navigation ' +
-      'will not function correctly'
-    )
   },
 
   render() {
