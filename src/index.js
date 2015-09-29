@@ -84,7 +84,7 @@ const Link = React.createClass({
     if (this.props.onClick)
       clickResult = this.props.onClick(event)
 
-    if (isModifiedEvent(event) || !isLeftClickEvent(event))
+    if (isModifiedEvent(event))
       return
 
     if (clickResult === false || event.defaultPrevented === true)
@@ -98,10 +98,7 @@ const Link = React.createClass({
       } else if (this.props.historyType === 'replace') {
         this.context.history.replaceState(this.props.state, this.props.to, this.props.query);
       } else {
-        warning(
-          this.props.historyType,
-          `Only 'push' and 'replace' are supported as historyTypes`
-        );
+        console.error(`Only 'push' and 'replace' are supported as historyTypes`);
       }
     }
   },
@@ -125,8 +122,6 @@ const Link = React.createClass({
     // Ignore if rendered outside the context
     // of history, simplifies unit testing.
     if (history) {
-      props.href = history.createHref(to, query)
-
       if (activeClassName || (activeStyle != null && !isEmptyObject(activeStyle))) {
         if (history.isActive(to, query, onlyActiveOnIndex)) {
           if (activeClassName)
