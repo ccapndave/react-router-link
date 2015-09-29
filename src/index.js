@@ -36,6 +36,19 @@ function isEmptyObject(object) {
  * in the state/query props, respectively.
  *
  *   <Link ... query={{ show: true }} state={{ the: 'state' }} />
+ * 
+ * This updated version of the link component adds two extra parameters:
+ * 
+ * eventName
+ * =========
+ * This is the event that the component listens to.  It defaults to `onClick`,
+ * but can be set to another event such as `onTouchTap` if you are using the
+ * `react-tap-event-plugin` module to get around the iOS 300ms delay.
+ * 
+ * historyType
+ * ===========
+ * This can be set to either `push` or `replace`.  It defaults to 'push', and
+ * selects when the Link uses `pushState` or `replaceState`.
  */
 const Link = React.createClass({
 
@@ -50,14 +63,18 @@ const Link = React.createClass({
     to: string.isRequired,
     query: object,
     state: object,
-    onClick: func
+    onClick: func,
+    eventName: string.isRequired,
+    historyType: string.isRequired
   },
 
   getDefaultProps() {
     return {
       onlyActiveOnIndex: false,
       className: '',
-      style: {}
+      style: {},
+      eventName: 'onClick',
+      historyType: 'push'
     }
   },
 
@@ -75,8 +92,18 @@ const Link = React.createClass({
 
     event.preventDefault()
 
-    if (allowTransition)
-      this.context.history.pushState(this.props.state, this.props.to, this.props.query)
+    if (allowTransition) {
+      if (this.props.historyType === 'push') {
+        this.context.history.pushState(this.props.state, this.props.to, this.props.query);
+      } else if (this.props.historyType === 'replace') {
+        this.context.history.replaceState(this.props.state, this.props.to, this.props.query);
+      } else {
+        warning(
+          this.props.historyType,
+          `Only 'push' and 'replace' are supported as historyTypes`
+        );
+      }
+    }
   },
 
   componentWillMount() {
@@ -90,9 +117,10 @@ const Link = React.createClass({
 
   render() {
     const { history } = this.context
-    const { activeClassName, activeStyle, onlyActiveOnIndex, to, query, state, onClick, ...props } = this.props
+    const { activeClassName, activeStyle, onlyActiveOnIndex, to, query, state, onClick, eventName, ...props } = this.props
 
-    props.onClick = this.handleClick
+    //props.onClick = this.handleClick
+    props[eventName] = this.handleClick
 
     // Ignore if rendered outside the context
     // of history, simplifies unit testing.
@@ -115,4 +143,4 @@ const Link = React.createClass({
 
 })
 
-export default Link
+export { Link }
