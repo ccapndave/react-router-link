@@ -1,6 +1,6 @@
 {
     "name": "react-router-link",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "An updated version of the Link component for react-router",
     "main": "lib/index.js",
     "scripts": {
