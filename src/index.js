@@ -1,9 +1,9 @@
 import React from 'react'
 
-const { bool, object, string, func } = React.PropTypes
+const { bool, object, string, func } = React.PropTypes;
 
 function isLeftClickEvent(event) {
-    return event.button === 0
+    return event.button === 0;
 }
 
 function isModifiedEvent(event) {
@@ -13,9 +13,9 @@ function isModifiedEvent(event) {
 function isEmptyObject(object) {
     for (const p in object)
         if (object.hasOwnProperty(p))
-            return false
+            return false;
 
-    return true
+    return true;
 }
 
 /**
@@ -56,7 +56,7 @@ function isEmptyObject(object) {
 class Link extends React.Component {
     static contextTypes = {
         history: object
-    }
+    };
     static propTypes = {
         activeStyle: object,
         activeClassName: string,
@@ -67,28 +67,28 @@ class Link extends React.Component {
         onClick: func,
         eventName: string.isRequired,
         historyType: string.isRequired
-    }
+    };
     static defaultProps = {
         onlyActiveOnIndex: false,
         className: '',
         style: {},
         eventName: 'onClick',
         historyType: 'push'
-    }
+    };
 
     handleClick(event) {
-        let allowTransition = true, clickResult
+        let allowTransition = true, clickResult;
 
         if (this.props.onClick)
-            clickResult = this.props.onClick(event)
+            clickResult = this.props.onClick(event);
 
         if (isModifiedEvent(event))
-            return
+            return;
 
         if (clickResult === false || event.defaultPrevented === true)
-            allowTransition = false
+            allowTransition = false;
 
-        event.preventDefault()
+        event.preventDefault();
 
         if (allowTransition) {
             if (this.props.historyType === 'push') {
@@ -104,8 +104,8 @@ class Link extends React.Component {
     }
 
     render() {
-        const { history } = this.context
-        const { activeClassName, activeStyle, onlyActiveOnIndex, to, query, state, onClick, eventName, ...props } = this.props
+        const { history } = this.context;
+        const { activeClassName, activeStyle, onlyActiveOnIndex, to, query, state, onClick, eventName, ...props } = this.props;
 
         props[eventName] = this.handleClick.bind(this);
 
@@ -115,15 +115,15 @@ class Link extends React.Component {
             if (activeClassName || (activeStyle != null && !isEmptyObject(activeStyle))) {
                 if (history.isActive(to, query, onlyActiveOnIndex)) {
                     if (activeClassName)
-                        props.className += props.className === '' ? activeClassName : ` ${activeClassName}`
+                        props.className += props.className === '' ? activeClassName : ` ${activeClassName}`;
 
                     if (activeStyle)
-                        props.style = { ...props.style, ...activeStyle }
+                        props.style = { ...props.style, ...activeStyle };
                 }
             }
         }
 
-        return React.createElement('a', props)
+        return React.createElement('a', props);
     }
 }
 
