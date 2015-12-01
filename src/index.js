@@ -1,6 +1,6 @@
 import React from 'react'
 
-const { bool, object, string, func } = React.PropTypes;
+const { bool, object, string, func, oneOfType, arrayOf } = React.PropTypes;
 
 function isLeftClickEvent(event) {
     return event.button === 0;
@@ -35,19 +35,20 @@ function isEmptyObject(object) {
  * in the state/query props, respectively.
  *
  *   <Link ... query={{ show: true }} state={{ the: 'state' }} />
- * 
+ *
  * This updated version of the link component adds two extra parameters:
- * 
+ *
  * eventName
  * =========
  * This is the event that the component listens to.  It defaults to `onClick`,
  * but can be set to another event such as `onTouchTap` if you are using the
  * `react-tap-event-plugin` module to get around the iOS 300ms delay.
- * 
+ * You can also pass an array of strings to listen to multiple events.
+ *
  * historyType
  * ===========
  * This can be set to either `push`, `replace` or `back`.
- * 
+ *
  * `push`: this adds the location to the history using `pushState`
  * `replace`: this replaces the top of the history using `replaceState`
  * `back`: this goes back to the previous history location in the stack.  If you use
@@ -65,7 +66,7 @@ class Link extends React.Component {
         query: object,
         state: object,
         onClick: func,
-        eventName: string.isRequired,
+        eventName: oneOfType([ string, arrayOf(string)]),
         historyType: string.isRequired
     };
     static defaultProps = {
@@ -107,7 +108,15 @@ class Link extends React.Component {
         const { history } = this.context;
         const { activeClassName, activeStyle, onlyActiveOnIndex, to, query, state, onClick, eventName, ...props } = this.props;
 
-        props[eventName] = this.handleClick.bind(this);
+        if (toString.call(eventName) === '[object Array]') {
+            eventName.forEach(event => {
+                props[eventName] = this.handleClick.bind(this);
+            });
+        } else {
+            props[eventName] = this.handleClick.bind(this);
+        }
+
+
 
         // Ignore if rendered outside the context
         // of history, simplifies unit testing.
