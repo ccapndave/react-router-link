@@ -108,7 +108,7 @@ class Link extends React.Component {
         const { history } = this.context;
         const { activeClassName, activeStyle, onlyActiveOnIndex, to, query, state, onClick, eventName, ...props } = this.props;
 
-        if (toString.call(eventName) === '[object Array]') {
+        if (Object.prototype.toString.call(eventName) === '[object Array]') {
             eventName.forEach(eventName => {
                 props[eventName] = this.handleClick.bind(this);
             });
