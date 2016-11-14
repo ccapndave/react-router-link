@@ -6,6 +6,11 @@ function isLeftClickEvent(event) {
     return event.button === 0;
 }
 
+function isExternalLinkClickEvent(event) {
+    // currentTarget is not available in IE10 and older
+    return !!(event.currentTarget && event.currentTarget.host !== window.location.host)
+}
+
 function isModifiedEvent(event) {
     return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
 }
@@ -86,7 +91,7 @@ class Link extends React.Component {
         if (isModifiedEvent(event))
             return;
 
-        if (clickResult === false || event.defaultPrevented === true)
+        if (clickResult === false || event.defaultPrevented === true || isExternalLinkClickEvent(event))
             allowTransition = false;
 
         event.preventDefault();

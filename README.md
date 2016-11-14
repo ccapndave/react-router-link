@@ -1,7 +1,7 @@
 # react-router-link
 An updated Link component for react-router
 
-This adds some extra properties to the default react-router Link component so that:
+This allows to use external URLs and adds some extra properties to the default react-router Link component so that:
 
 a) you can select whether to use `push`, `replace` or `back` history commands
 b) you can choose a different event to `onClick`
